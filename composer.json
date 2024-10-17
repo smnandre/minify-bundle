@@ -1,0 +1,64 @@
+{
+    "name": "sensiolabs/minify-bundle",
+    "description": "Minify assets (CSS, JS, SVG, ..) Symfony",
+    "license": "MIT",
+    "homepage": "https://github.com/sensiolabs/minify-bundle",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony",
+        "assets",
+        "minify",
+        "minifier",
+        "compress",
+        "uglify",
+        "css",
+        "js",
+        "asset-mapper"
+    ],
+    "authors": [
+        {
+            "name": "Simon André",
+            "email": "smn.andre@gmail.com"
+        },
+        {
+            "name": "SensioLabs",
+            "homepage": "https://sensiolabs.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "psr/log": "^2|^3",
+        "symfony/filesystem": "^7.0",
+        "symfony/http-client-contracts": "^3.5",
+        "symfony/process": "^7.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.12",
+        "phpunit/phpunit": "^10.5",
+        "symfony/asset-mapper": "^7.1",
+        "symfony/console": "^7.1",
+        "symfony/framework-bundle": "^7.1",
+        "symfony/http-client": "^7.1",
+        "symfony/http-kernel": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sensiolabs\\MinifyBundle\\": "src/"
+        }
+    },
+      "autoload-dev": {
+        "psr-4": {
+            "Sensiolabs\\MinifyBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "extra": {
+        "thanks": {
+            "name": "tdewolff/minify",
+            "url": "https://github.com/tdewolff/minify"
+        }
+    }
+}

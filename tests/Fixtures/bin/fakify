@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+if (!isset($argv[1]) || '--type' !== $argv[1] || !isset($argv[2])) {
+    echo 'ERROR: Missing type argument.';
+    exit(1);
+}
+if (!in_array($argv[2], ['css', 'js'])) {
+    echo 'ERROR: Invalid type argument.';
+    exit(1);
+}
+
+$typeArg = $argv[2];
+$input = file_get_contents('php://stdin');
+
+if ('css' === $typeArg) {
+    file_put_contents('php://stdout', $input);
+    
+    return;
+}
+
+if ('js' === $typeArg) {
+//    file_put_contents('php://stdout', $input);
+    exit(20000000);
+    
+    return;
+}
+

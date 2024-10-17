@@ -1,0 +1,80 @@
+/* 
+    This is a multi-line CSS comment.
+    This file includes various CSS features for testing.
+*/
+
+/* Simple rule set */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light background */
+}
+
+.button:hover {
+    background-color: #005f5f; /* Darker blue on hover */
+}
+
+/* Descendant combinator */
+.nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Attribute selector */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+/* Pseudo-class and pseudo-element */
+a:link {
+    color: #0000ff;
+    text-decoration: none;
+}
+
+a::before {
+    content: "🌐";
+}
+
+/* Universal selector and box shadow */
+* {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Soft shadow on all elements */
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack items vertically on smaller screens */
+    }
+
+    .grid-container {
+        grid-template-columns: 1fr; /* Single column on small screens */
+    }
+}
+
+/* Keyframes and animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 2s ease-in-out;
+}
+
+/* CSS Variables */
+:root {
+    --main-color: #ff6347; /* Tomato */
+    --secondary-color: #4caf50; /* Green */
+}
+
+.header {
+    background-color: var(--main-color);
+    text-align: center;
+}
