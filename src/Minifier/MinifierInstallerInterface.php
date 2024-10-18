@@ -29,12 +29,12 @@ interface MinifierInstallerInterface
     public function install(string $version = self::VERSION_LATEST, bool $force = false): void;
 
     /**
-     * @return bool  Whether the binary is installed
+     * @return bool Whether the binary is installed
      */
     public function isInstalled(): bool;
 
     /**
-     * @return string   The path to the installed binary
+     * @return string The path to the installed binary
      */
     public function getInstallBinaryPath(): string;
 }

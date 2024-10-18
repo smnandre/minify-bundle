@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Sensiolabs\MinifyBundle\Tests\Minifier;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Sensiolabs\MinifyBundle\Minifier\MinifierInterface;
 use Sensiolabs\MinifyBundle\Minifier\TraceableMinifier;
-use PHPUnit\Framework\TestCase;
 
 #[CoversClass(TraceableMinifier::class)]
 class TraceableMinifierTest extends TestCase

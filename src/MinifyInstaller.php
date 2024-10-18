@@ -122,5 +122,4 @@ final class MinifyInstaller implements MinifierInstallerInterface
 
         throw new InstallException(sprintf('Unable to find a binary for release "%s".', $version));
     }
-
 }

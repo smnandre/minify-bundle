@@ -13,18 +13,12 @@ declare(strict_types=1);
 
 namespace Sensiolabs\MinifyBundle;
 
-use Sensiolabs\MinifyBundle\AssetMapper\MinifierCompiler;
-use Sensiolabs\MinifyBundle\Command\MinifyAssetCommand;
-use Sensiolabs\MinifyBundle\Command\MinifyInstallCommand;
-use Sensiolabs\MinifyBundle\Minifier\MinifierInterface;
 use Sensiolabs\MinifyBundle\Minifier\TraceableMinifier;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
-use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 

@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sensiolabs\MinifyBundle\Tests\EventListener;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use Sensiolabs\MinifyBundle\EventListener\PreAssetsCompileEventListener;
 use PHPUnit\Framework\TestCase;
+use Sensiolabs\MinifyBundle\EventListener\PreAssetsCompileEventListener;
 use Sensiolabs\MinifyBundle\Minifier\MinifierInstallerInterface;
 use Symfony\Component\AssetMapper\Event\PreAssetsCompileEvent;
 use Symfony\Component\Console\Output\NullOutput;

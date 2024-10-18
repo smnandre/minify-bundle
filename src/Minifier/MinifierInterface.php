@@ -22,9 +22,7 @@ interface MinifierInterface
     public const TYPE_JS = 'js';
 
     /**
-     * @param string $input
      * @param self::TYPE_CSS|self::TYPE_JS $type
-     * @return string
      */
     public function minify(string $input, string $type): string;
 }

@@ -35,12 +35,12 @@ class MinifyBundleTestKernel extends Kernel
         return [
             new FrameworkBundle(),
             new SensiolabsMinifyBundle(),
-            new class () extends Bundle {
+            new class extends Bundle {
                 public function shutdown(): void
                 {
                     restore_exception_handler();
                 }
-            }
+            },
         ];
     }
 
