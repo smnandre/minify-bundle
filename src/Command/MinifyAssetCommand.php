@@ -79,6 +79,7 @@ EOF
         }
         if (!$fs->exists($inputArg)) {
             $io->error(sprintf('Cannot read file "%s".', $inputArg));
+
             return Command::FAILURE;
         }
 
@@ -96,6 +97,7 @@ EOF
 
         if (null === $outputArg) {
             $io->text($output);
+
             return Command::SUCCESS;
         }
 
@@ -104,6 +106,7 @@ EOF
             $fs->dumpFile($outputArg, $output);
         } catch (IOException) {
             $io->error(sprintf('Cannot write to file "%s".', $outputArg));
+
             return Command::FAILURE;
         }
 

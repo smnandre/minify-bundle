@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sensiolabs\MinifyBundle\Tests\Minifier;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use Sensiolabs\MinifyBundle\Minifier\SystemUtils;
 use PHPUnit\Framework\TestCase;
+use Sensiolabs\MinifyBundle\Minifier\SystemUtils;
 
 #[CoversClass(SystemUtils::class)]
 class SystemUtilsTest extends TestCase
@@ -55,5 +55,4 @@ class SystemUtilsTest extends TestCase
         $releaseUtils = new SystemUtils('linux', 'amd64');
         $this->assertFalse($releaseUtils->match('linux-arm64'));
     }
-
 }

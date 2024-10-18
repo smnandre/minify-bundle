@@ -25,7 +25,6 @@ use Symfony\Component\AssetMapper\MappedAsset;
 final class MinifierCompiler implements AssetCompilerInterface
 {
     /**
-     * @param MinifierInterface $minify
      * @param list<string> $extensions
      * @param list<string> $ignorePaths
      */
@@ -58,10 +57,10 @@ final class MinifierCompiler implements AssetCompilerInterface
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
     {
-        $type = match($extension = $asset->publicExtension) {
+        $type = match ($extension = $asset->publicExtension) {
             'css', 'scss' => 'css',
             'js' => 'js',
-            default => throw new RuntimeException(sprintf('Invalid type "%s".', $extension))
+            default => throw new RuntimeException(sprintf('Invalid type "%s".', $extension)),
         };
 
         return $this->minify->minify($content, $type);

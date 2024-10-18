@@ -14,15 +14,14 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Sensiolabs\MinifyBundle\AssetMapper\MinifierCompiler;
-use Sensiolabs\MinifyBundle\Command\MinifyInstallCommand;
 use Sensiolabs\MinifyBundle\Command\MinifyAssetCommand;
+use Sensiolabs\MinifyBundle\Command\MinifyInstallCommand;
 use Sensiolabs\MinifyBundle\Minifier\MinifierInterface;
 use Sensiolabs\MinifyBundle\Minify;
 use Sensiolabs\MinifyBundle\MinifyFactory;
 use Sensiolabs\MinifyBundle\MinifyInstaller;
 
 return static function (ContainerConfigurator $container) {
-
     $container->services()
 
         ->set('.sensiolabs_minify.minifier.minify_installer', MinifyInstaller::class)
