@@ -91,7 +91,7 @@ EOF
 
         /** @var 'css'|'js' $typeArg */
         $typeArg = $input->getOption('type') ?? pathinfo($inputArg, PATHINFO_EXTENSION);
-        $inputArg = $fs->readFile($inputArg);
+        $inputArg = file_get_contents($inputArg);
 
         $output = $this->minifier->minify($inputArg, $typeArg);
 
