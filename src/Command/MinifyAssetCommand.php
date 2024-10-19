@@ -82,6 +82,8 @@ EOF
 
             return Command::FAILURE;
         }
+        /** @var string $inputArg */
+        $inputArg = file_get_contents($inputArg);
 
         /** @var string|null $outputArg */
         $outputArg = $input->getArgument('output');
@@ -91,7 +93,6 @@ EOF
 
         /** @var 'css'|'js' $typeArg */
         $typeArg = $input->getOption('type') ?? pathinfo($inputArg, PATHINFO_EXTENSION);
-        $inputArg = $fs->readFile($inputArg);
 
         $output = $this->minifier->minify($inputArg, $typeArg);
 
