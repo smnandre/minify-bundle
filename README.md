@@ -187,8 +187,22 @@ php bin/console minify:assets css/main.css css/main.min.css
 
 ## Credits
 
-- Minify binary: [Timo Dewolf](https://github.com/tdewolff) 
-- Symfony Bundle: [Simon André](https://github.com/smnandre) & [SensioLabs](https://github.com/sensiolabs)
+### Authors
+
+- MinifyBundle: [Simon André](https://github.com/smnandre) & [SensioLabs](https://github.com/sensiolabs)
+- Minify binary: [Timo Dewolf](https://github.com/tdewolff)
+
+### Acknowledgments
+
+This bundle is inspired by the following projects:
+
+- [SassBundle](https://github.com/SymfonyCasts/sass-bundle) from @SymfonyCasts
+- [BiomejsBundle](https://github.com/Kocal/BiomeJsBundle) from @Kocal
+- [TypeScriptBundle](https://github.com/sensiolabs/AssetMapperTypeScriptBundle) from @SensioLabs
+
+### Contributors
+
+Special thanks to the Symfony community for their contributions and feedback.
 
 ## License
 
