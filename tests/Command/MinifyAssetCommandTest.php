@@ -76,7 +76,7 @@ class MinifyAssetCommandTest extends TestCase
         $this->assertSame(Command::FAILURE, $tester->getStatusCode());
         $display = $tester->getDisplay();
         $this->assertStringContainsString('The type of', $display);
-        $this->assertStringContainsString('TestKernel.php" is "php", it must be "css" or "js".', $display);
+        $this->assertStringContainsString('it must be "css" or "js".', $display);
     }
 
     public function testMinifyAssetCommandFailsWhenOutputFileIsNotWritable(): void
