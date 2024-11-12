@@ -103,7 +103,11 @@ final class MinifyInstaller implements MinifierInstallerInterface
         }
 
         $this->filesystem->mkdir(dirname($this->getInstallBinaryPath()));
-        $this->filesystem->copy(Path::join($tempDir, 'minify'), $this->getInstallBinaryPath());
+        if (str_ends_with($downloadFilename, '.zip')) {
+            $this->filesystem->copy(Path::join($tempDir, 'minify.exe'), $this->getInstallBinaryPath());
+        } else {
+            $this->filesystem->copy(Path::join($tempDir, 'minify'), $this->getInstallBinaryPath());
+        }
         $this->filesystem->remove($tempDir);
     }
 

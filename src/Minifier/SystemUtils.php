@@ -62,7 +62,7 @@ final class SystemUtils
 
     private function getArchitecture(string $architecture): ?string
     {
-        return match ($architecture) {
+        return match (\strtolower($architecture)) {
             'amd64', 'x86_64' => self::ARCH_AMD64,
             'arm64' => self::ARCH_ARM64,
             'i386', 'i686' => self::ARCH_X86,
