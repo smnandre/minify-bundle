@@ -82,16 +82,32 @@ final class MinifyInstaller implements MinifierInstallerInterface
             $this->filesystem->appendToFile($downloadFilename, $chunk->getContent(), true);
         }
 
-        // TODO windows
-
-        $archive = new \PharData($downloadFilename);
-        if (!isset($archive['minify'])) {
-            throw new LogicException('The minify binary is missing from the archive.');
+        if (str_ends_with($downloadFilename, '.zip')) {
+            $download = function () use ($downloadFilename, $tempDir) {
+                $archive = new \ZipArchive();
+                $archive->open($downloadFilename);
+                $archive->extractTo($tempDir, 'minify');
+                $archive->close();
+            };
+        } else {
+            $download = function () use ($downloadFilename, $tempDir) {
+                $archive = new \PharData($downloadFilename);
+                $archive->extractTo($tempDir, ['minify'], true);
+            };
         }
-        $archive->extractTo($tempDir, ['minify'], true);
+
+        try {
+            $download();
+        } catch (\Throwable $e) {
+            throw new InstallException(sprintf('Error extracting the binary from archive "%s".', $downloadFilename), 0, $e->getPrevious());
+        }
 
         $this->filesystem->mkdir(dirname($this->getInstallBinaryPath()));
-        $this->filesystem->copy(Path::join($tempDir, 'minify'), $this->getInstallBinaryPath());
+        if (str_ends_with($downloadFilename, '.zip')) {
+            $this->filesystem->copy(Path::join($tempDir, 'minify.exe'), $this->getInstallBinaryPath());
+        } else {
+            $this->filesystem->copy(Path::join($tempDir, 'minify'), $this->getInstallBinaryPath());
+        }
         $this->filesystem->remove($tempDir);
     }
 
