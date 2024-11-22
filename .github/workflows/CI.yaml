@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: "Git: checkout"
         uses: actions/checkout@v4
-      - name: "PHP: setup 8.3 "
+      - name: "PHP: setup 8.3"
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -92,12 +92,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version:
-          - '8.2'
-          - '8.3'
-        dependencies:
-          - 'low'
-          - 'high'
+        include:
+          - php-version: '8.2'
+            dependencies: 'low'
+          - php-version: '8.3'
+            dependencies: 'high'
+          - php-version: '8.4'
+            dependencies: 'high'
       fail-fast: false
     steps:
       - name: "Git: Checkout"
