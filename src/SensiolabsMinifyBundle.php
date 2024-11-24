@@ -43,7 +43,7 @@ final class SensiolabsMinifyBundle extends AbstractBundle
             ->get('.sensiolabs_minify.minifier.minify_factory')
                 ->arg(0, $config['minify']['local_binary'])
 
-            ->get('.sensiolabs_minify.asset_mapper.compiler')
+            ->get('sensiolabs_minify.asset_mapper.compiler')
                 ->arg(1, array_keys(array_filter($config['asset_mapper']['types']), boolval(...)))
                 ->arg(2, $config['asset_mapper']['ignore_paths'])
                 ->arg(3, $config['asset_mapper']['ignore_vendor'])
@@ -51,7 +51,7 @@ final class SensiolabsMinifyBundle extends AbstractBundle
 
         if (!$config['asset_mapper']['enabled']) {
             $container->services()
-                ->remove('.sensiolabs_minify.asset_mapper.compiler')
+                ->remove('sensiolabs_minify.asset_mapper.compiler')
             ;
         }
 
