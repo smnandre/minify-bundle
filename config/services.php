@@ -43,7 +43,7 @@ return static function (ContainerConfigurator $container) {
 
         ->alias(MinifierInterface::class, 'sensiolabs_minify.minifier')
 
-        ->set('.sensiolabs_minify.asset_mapper.compiler', MinifierCompiler::class)
+        ->set('sensiolabs_minify.asset_mapper.compiler', MinifierCompiler::class)
             ->args([service('sensiolabs_minify.minifier')])
             ->tag('asset_mapper.compiler', ['priority' => -1024])
 
