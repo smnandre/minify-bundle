@@ -2,9 +2,7 @@ name: Integration Tests
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
   schedule:
     - cron: "0 0 * * *" # Exécuter tous les jours à minuit
   workflow_dispatch:
@@ -74,9 +72,9 @@ jobs:
         run: |
           symfony new --webapp app --version="${{ matrix.symfony-version }}" --no-interaction
           cd app
-      
+
       - name: Install MinifyBundle
-        run:  | 
+        run: |
           cd app
           composer config repositories.minify-bundle path ../../
           composer require sensiolabs/minify-bundle:@dev --no-interaction
@@ -100,7 +98,7 @@ jobs:
           mkdir -p assets/css assets/js
           echo "  /** CSS */  body {  background-color:   red;  } " > assets/css/style.css
           echo " /** JS */ console.log('Hello' + 'world!  '  ); " > assets/js/script.js
-          
+
       - name: Check assets
         run: |
           cd app
@@ -112,20 +110,20 @@ jobs:
           cd app
           php bin/console asset-map:compile
           php bin/console asset-map:compile
-        
+
       - name: Check assets
         run: |
           cd app
-          echo "========== /assets =========="
-          du -ha public
-          
-      - name: Minify commands    
+          echo "========== /public =========="
+          du -h public
+
+      - name: Minify commands
         run: |
           cd app
           php bin/console minify:download
           php bin/console minify:asset assets/css/style.css assets/css/style.min.css
           php bin/console minify:asset assets/js/script.js assets/js/script.min.js
-          
+
       - name: Check assets
         run: |
           cd app
