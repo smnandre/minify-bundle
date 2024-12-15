@@ -31,6 +31,7 @@ permissions:
 
 jobs:
   install:
+    name: "PHP ${{ matrix.php-version }} / SF ${{ matrix.symfony-version }}"
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -111,7 +112,6 @@ jobs:
         run: |
           cd app
           php bin/console asset-map:compile
-          php bin/console asset-map:compile
 
       - name: Check assets
         run: |
@@ -122,7 +122,7 @@ jobs:
       - name: Minify commands
         run: |
           cd app
-          php bin/console minify:download
+          php bin/console minify:install
           php bin/console minify:asset assets/css/style.css assets/css/style.min.css
           php bin/console minify:asset assets/js/script.js assets/js/script.min.js
 
