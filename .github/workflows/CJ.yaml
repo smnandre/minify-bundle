@@ -98,45 +98,6 @@ jobs:
           php bin/console asset-map:compile
           echo "========== /public =========="
           du -ha public
- 
-      - name: Minify commands
-        run: |
-          cd app
-          
-          # Capture file content before minification
-          css_before=$(cat assets/css/style.css)
-          js_before=$(cat assets/js/script.js)
-          
-          # Perform minification
-          php bin/console minify:asset assets/css/style.css assets/css/style.min.css
-          php bin/console minify:asset assets/js/script.js assets/js/script.min.js
-          
-          # Capture file content after minification
-          css_after=$(cat assets/css/style.min.css)
-          js_after=$(cat assets/js/script.min.js)
-          
-          # Write results to the GitHub Actions summary in Markdown
-          echo "## Minification Results" >> $GITHUB_STEP_SUMMARY
-          
-          echo "### CSS File" >> $GITHUB_STEP_SUMMARY
-          echo "**Before:**" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`css" >> $GITHUB_STEP_SUMMARY
-          echo "$css_before" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "**After:**" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`css" >> $GITHUB_STEP_SUMMARY
-          echo "$css_after" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          
-          echo "### JS File" >> $GITHUB_STEP_SUMMARY
-          echo "**Before:**" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`javascript" >> $GITHUB_STEP_SUMMARY
-          echo "$js_before" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "**After:**" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`javascript" >> $GITHUB_STEP_SUMMARY
-          echo "$js_after" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Minify commands
         run: |
@@ -148,3 +109,32 @@ jobs:
           php bin/console minify:asset assets/js/script.js assets/js/script.min.js
           echo "========== /assets =========="
           du -ha assets
+
+      - name: Minify commands
+        run: |
+          cd app
+          php bin/console minify:asset assets/css/style.css public/assets/css/style.min.css
+          php bin/console minify:asset assets/js/script.js public/assets/js/script.min.js
+
+      - name: Generate Assets Comparison Summary
+        run: |
+          # Function to list files with sizes
+          list_files_with_sizes() {
+            local dir=$1
+            find "$dir" -type f -exec ls -lh {} + | awk '{printf "| %-7s | %s |\n", $5, $9}'
+          }
+
+          # Write header for Markdown table
+          echo "## Assets File Comparison" >> $GITHUB_STEP_SUMMARY
+
+          # Add source (assets) files
+          echo "### Source Files (assets)" >> $GITHUB_STEP_SUMMARY
+          echo "| Size    | File Path                     |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-------------------------------|" >> $GITHUB_STEP_SUMMARY
+          list_files_with_sizes "assets" >> $GITHUB_STEP_SUMMARY
+
+          # Add destination (public/assets) files
+          echo "### Destination Files (public/assets)" >> $GITHUB_STEP_SUMMARY
+          echo "| Size    | File Path                     |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-------------------------------|" >> $GITHUB_STEP_SUMMARY
+          list_files_with_sizes "public/assets" >> $GITHUB_STEP_SUMMARY
