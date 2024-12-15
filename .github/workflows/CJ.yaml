@@ -99,39 +99,29 @@ jobs:
           echo "========== /public =========="
           du -ha public
 
-      - name: Generate Assets Comparison Summary
+      - name: Generate Assets Comparison Table
         run: |
           cd app
 
-          # Function to list files and sizes
-          list_files_with_sizes() {
-            local dir=$1
-            find "$dir" -type f \
-              ! -path "*vendor*" ! -path "*@*" | sort | \
-              xargs ls -lh | awk '{print $5, $9}'
-          }
+          # Check if manifest file exists
+          if [ ! -f public/assets/manifest.json ]; then
+            echo "Manifest file not found!" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
 
-          # Parse the manifest.json and map files
-          generate_comparison_table() {
-            local manifest_file="public/assets/manifest.json"
-            if [ -f "$manifest_file" ]; then
-              echo "| Source File                   | Destination File                  |" >> $GITHUB_STEP_SUMMARY
-              echo "|-------------------------------|----------------------------------|" >> $GITHUB_STEP_SUMMARY
-              jq -r 'to_entries[] | "\(.key) \(.value)"' "$manifest_file" | while read -r source dest; do
-                if [ -f "$source" ] && [ -f "$dest" ]; then
-                  source_size=$(ls -lh "$source" | awk '{print $5}')
-                  dest_size=$(ls -lh "$dest" | awk '{print $5}')
-                  echo "| $source ($source_size) | $dest ($dest_size) |" >> $GITHUB_STEP_SUMMARY
-                fi
-              done
-            else
-              echo "Manifest file not found: $manifest_file" >> $GITHUB_STEP_SUMMARY
-            fi
-          }
-
-          # Write to GitHub Actions Summary
+          # Write the table header
           echo "## Assets Comparison Table" >> $GITHUB_STEP_SUMMARY
-          generate_comparison_table
+          echo "| Source File                   | Source Size | Destination File                  | Dest Size  |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------------------------------|-------------|----------------------------------|------------|" >> $GITHUB_STEP_SUMMARY
+
+          # Parse the manifest.json and generate rows
+          jq -r 'to_entries[] | "\(.key) \(.value)"' public/assets/manifest.json | while read -r source dest; do
+            if [ -f "$source" ] && [ -f "$dest" ]; then
+              source_size=$(ls -lh "$source" | awk '{print $5}')
+              dest_size=$(ls -lh "$dest" | awk '{print $5}')
+              printf "| %-30s | %-11s | %-32s | %-10s |\n" "$source" "$source_size" "$dest" "$dest_size" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
 
       - name: Minify commands
         run: |
