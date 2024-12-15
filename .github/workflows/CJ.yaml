@@ -107,7 +107,8 @@ jobs:
           echo "========== /assets =========="
           du -ha assets
 
-      - name: Compile assets    
+      - name: Compile assets
+        run: |
           cd app
           php bin/console asset-map:compile
           php bin/console asset-map:compile
