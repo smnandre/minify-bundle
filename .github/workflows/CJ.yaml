@@ -98,6 +98,22 @@ jobs:
           php bin/console asset-map:compile
           echo "========== /public =========="
           du -ha public
+          
+      - name: Minify commands
+        run: |
+          cd app
+          result_css=$(php bin/console minify:asset assets/css/style.css assets/css/style.min.css)
+          result_js=$(php bin/console minify:asset assets/js/script.js assets/js/script.min.js)
+          
+          # Print results in Markdown style
+          echo "## Minification Results" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "CSS Minification Result:" >> $GITHUB_STEP_SUMMARY
+          echo "$result_css" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "JS Minification Result:" >> $GITHUB_STEP_SUMMARY
+          echo "$result_js" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Minify commands
         run: |
