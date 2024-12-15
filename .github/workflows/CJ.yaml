@@ -36,10 +36,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "PHP 8.2 / SF 6.4"
+          - 
             php-version: 8.2
             symfony-version: 6.4
-          - name: "PHP 8.4 / SF 7.2"
+          - 
             php-version: 8.4
             symfony-version: 7.2
           - name: "PHP 8.4 / SF 7.3"
@@ -80,11 +80,6 @@ jobs:
           composer config repositories.minify-bundle path ../../
           composer require sensiolabs/minify-bundle:@dev --no-interaction
           composer show sensiolabs/minify-bundle
-          
-          composer config repositories.minify-bundle remove
-          composer require sensiolabs/minify-bundle --no-interaction
-          composer show sensiolabs/minify-bundle
-          
       - name: Check Minify Configuration
         run: |
           cd app
