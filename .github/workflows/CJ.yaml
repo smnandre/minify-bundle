@@ -76,12 +76,19 @@ jobs:
       - name: Install MinifyBundle
         run: |
           cd app
+          composer config extra.symfony.allow-contrib true
           composer config repositories.minify-bundle path ../../
           composer require sensiolabs/minify-bundle:@dev --no-interaction
           composer show sensiolabs/minify-bundle
+          
+          composer config repositories.minify-bundle remove
+          composer require sensiolabs/minify-bundle --no-interaction
+          composer show sensiolabs/minify-bundle
+          
       - name: Check Minify Configuration
         run: |
           cd app
+          php bin/console debug:config
           php bin/console debug:config sensiolabs_minify
       - name: Check MinifyBundle Commands
         run: |
