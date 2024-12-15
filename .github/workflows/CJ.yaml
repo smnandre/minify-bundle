@@ -35,6 +35,8 @@ jobs:
           php-version: ${{ matrix.php-version }}
           coverage: none
           tools: composer, symfony
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: "Composer: cache config"
         id: composer-cache
