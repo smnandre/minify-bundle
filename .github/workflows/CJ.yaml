@@ -118,10 +118,17 @@ jobs:
 
       - name: Generate Assets Comparison Summary
         run: |
+          # Changer de répertoire vers 'app'
+          cd app
+
           # Function to list files with sizes
           list_files_with_sizes() {
             local dir=$1
-            find "$dir" -type f -exec ls -lh {} + | awk '{printf "| %-7s | %s |\n", $5, $9}'
+            if [ -d "$dir" ]; then
+              find "$dir" -type f -exec ls -lh {} + | awk '{printf "| %-7s | %s |\n", $5, $9}'
+            else
+              echo "| N/A     | Directory $dir not found |"
+            fi
           }
 
           # Write header for Markdown table
