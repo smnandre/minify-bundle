@@ -1,0 +1,53 @@
+name: Integration Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "PHP 8.2 + SF 6.4"
+            php-version: 8.2
+            symfony-version: 6.4
+          - name: "PHP 8.3 + SF 7.2"
+            php-version: 8.3
+            symfony-version: 7.2
+          - name: "PHP 8.4 + SF 7.3-dev"
+            php-version: 8.4
+            symfony-version: 7.3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+          tools: composer, symfony
+
+      - name: Display Job Info
+        run: echo "${{ matrix.name }}"
+
+      - name: Create Symfony App
+        run: |
+          symfony new --webapp app --version="${{ matrix.symfony-version }}" --no-interaction
+          cd app
+          composer require sensiolabs/minify-bundle --dev
+
+      - name: Compile assets
+        run: |
+          cd app
+          php bin/console assets:install
+          php bin/console cache:clear
+          php bin/console cache:warmup
