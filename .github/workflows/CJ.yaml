@@ -23,7 +23,7 @@ jobs:
             symfony-version: 7.2
           - name: "PHP 8.4 + SF 7.3-dev"
             php-version: 8.4
-            symfony-version: 7.3
+            symfony-version: "next"
 
     steps:
       - name: Checkout code
@@ -61,7 +61,7 @@ jobs:
         run: |
           symfony new --webapp app --version="${{ matrix.symfony-version }}" --no-interaction
           cd app
-          composer require sensiolabs/minify-bundle --dev
+          composer require sensiolabs/minify-bundle
 
       - name: Compile assets
         run: |
@@ -69,3 +69,4 @@ jobs:
           php bin/console assets:install
           php bin/console cache:clear
           php bin/console cache:warmup
+          php bin/console ass-map:compile
