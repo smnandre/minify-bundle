@@ -99,6 +99,40 @@ jobs:
           echo "========== /public =========="
           du -ha public
 
+      - name: Generate Assets Comparison Summary
+        run: |
+          cd app
+
+          # Function to list files and sizes
+          list_files_with_sizes() {
+            local dir=$1
+            find "$dir" -type f \
+              ! -path "*vendor*" ! -path "*@*" | sort | \
+              xargs ls -lh | awk '{print $5, $9}'
+          }
+
+          # Parse the manifest.json and map files
+          generate_comparison_table() {
+            local manifest_file="public/assets/manifest.json"
+            if [ -f "$manifest_file" ]; then
+              echo "| Source File                   | Destination File                  |" >> $GITHUB_STEP_SUMMARY
+              echo "|-------------------------------|----------------------------------|" >> $GITHUB_STEP_SUMMARY
+              jq -r 'to_entries[] | "\(.key) \(.value)"' "$manifest_file" | while read -r source dest; do
+                if [ -f "$source" ] && [ -f "$dest" ]; then
+                  source_size=$(ls -lh "$source" | awk '{print $5}')
+                  dest_size=$(ls -lh "$dest" | awk '{print $5}')
+                  echo "| $source ($source_size) | $dest ($dest_size) |" >> $GITHUB_STEP_SUMMARY
+                fi
+              done
+            else
+              echo "Manifest file not found: $manifest_file" >> $GITHUB_STEP_SUMMARY
+            fi
+          }
+
+          # Write to GitHub Actions Summary
+          echo "## Assets Comparison Table" >> $GITHUB_STEP_SUMMARY
+          generate_comparison_table
+
       - name: Minify commands
         run: |
           cd app
@@ -109,12 +143,6 @@ jobs:
           php bin/console minify:asset assets/js/script.js assets/js/script.min.js
           echo "========== /assets =========="
           du -ha assets
-
-      - name: Minify commands
-        run: |
-          cd app
-          php bin/console minify:asset assets/css/style.css public/assets/css/style.min.css
-          php bin/console minify:asset assets/js/script.js public/assets/js/script.min.js
 
       - name: Generate Assets Comparison Summary
         run: |
