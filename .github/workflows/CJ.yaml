@@ -2,33 +2,62 @@ name: Integration Tests
 
 on:
   push:
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: "0 0 * * *" # Exécuter tous les jours à minuit
   workflow_dispatch:
+    inputs:
+      php-version:
+        description: "PHP version"
+        required: true
+        default: "8.4"
+        type: choice
+        options:
+          - "8.4"
+          - "8.3"
+          - "8.2"
+      symfony-version:
+        description: "Symfony version"
+        required: true
+        default: "7.2"
+        type: choice
+        options:
+          - "next"
+          - "7.2"
+          - "6.4"
 
 permissions:
   contents: read
 
 jobs:
   install:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: "PHP 8.2 + SF 6.4"
+          - name: "PHP 8.2 / SF 6.4"
             php-version: 8.2
             symfony-version: 6.4
-          - name: "PHP 8.3 + SF 7.2"
-            php-version: 8.3
+          - name: "PHP 8.4 / SF 7.2"
+            php-version: 8.4
             symfony-version: 7.2
-          - name: "PHP 8.4 + SF 7.3-dev"
+          - name: "PHP 8.4 / SF 7.3"
             php-version: 8.4
             symfony-version: "next"
 
     steps:
+      - run: echo "${{ matrix.name }}"
+
       - name: Checkout code
         uses: actions/checkout@v3
-        
+      - name: Configure Git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -38,35 +67,66 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }} # Add this line
-
-      - name: Configure Git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-
-      - name: "Composer: cache config"
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-      - name: "Composer: cache restore"
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Display Job Info
-        run: echo "${{ matrix.name }}"
+      - name: Setup problem matchers for PHP
+        run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
 
       - name: Create Symfony App
         run: |
           symfony new --webapp app --version="${{ matrix.symfony-version }}" --no-interaction
           cd app
-          composer require sensiolabs/minify-bundle
-
-      - name: Compile assets
+      
+      - name: Install MinifyBundle
+        run:  | 
+          cd app
+          composer config repositories.minify-bundle path ../../
+          composer require sensiolabs/minify-bundle:@dev --no-interaction
+          composer show sensiolabs/minify-bundle
+      - name: Check Minify Configuration
         run: |
           cd app
-          php bin/console assets:install
-          php bin/console cache:clear
-          php bin/console cache:warmup
+          php bin/console debug:config sensiolabs_minify
+      - name: Check MinifyBundle Commands
+        run: |
+          cd app
+          php bin/console minify:install -vv
+
+      - name: Require assets
+        run: |
+          cd app
+          php bin/console importmap:require bootstrap
+      - name: Create assets
+        run: |
+          cd app
+          mkdir -p assets/css assets/js
+          echo "  /** CSS */  body {  background-color:   red;  } " > assets/css/style.css
+          echo " /** JS */ console.log('Hello' + 'world!  '  ); " > assets/js/script.js
+          
+      - name: Check assets
+        run: |
+          cd app
+          echo "========== /assets =========="
+          du -ha assets
+
+      - name: Compile assets    
+          cd app
           php bin/console asset-map:compile
+          php bin/console asset-map:compile
+        
+      - name: Check assets
+        run: |
+          cd app
+          echo "========== /assets =========="
+          du -ha public
+          
+      - name: Minify commands    
+        run: |
+          cd app
+          php bin/console minify:download
+          php bin/console minify:asset assets/css/style.css assets/css/style.min.css
+          php bin/console minify:asset assets/js/script.js assets/js/script.min.js
+          
+      - name: Check assets
+        run: |
+          cd app
+          echo "========== /public =========="
+          du -h public
