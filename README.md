@@ -223,7 +223,7 @@ sensiolabs_minify:
 
         # you can also define the path to the binary explicitly, but this won't work
         # if you run the application in multiple servers with different binary locations
-        local_binary: "/usr/local/bin/minify"
+        # local_binary: "/usr/local/bin/minify"
 ```
 
 ## Credits
