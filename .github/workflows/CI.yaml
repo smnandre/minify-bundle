@@ -178,6 +178,7 @@ jobs:
             symfony composer config minimum-stability dev
             symfony composer config --json extra.symfony.allow-contrib 'true'
             symfony composer require 'sensiolabs/minify-bundle:*' --no-interaction
+          working-directory: my_app  
 
       -   name: "[Minify] Check configuration"
           run: symfony console debug:config sensiolabs_minify -v
