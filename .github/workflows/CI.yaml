@@ -139,3 +139,62 @@ jobs:
 #                uses: codecov/codecov-action@v4.0.1
 #                with:
 #                    token: ${{ secrets.CODECOV_TOKEN }}
+  
+  
+  e2e:
+    # 
+    # This job is largely based on the BiomeJsBundle CI workflow written by Kocal  
+    # https://github.com/Kocal/BiomeJsBundle/
+    #
+    name: E2E dev (${{ matrix.os }})
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+        #  - windows-latest
+        #  - macos-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      -   uses: actions/checkout@v4
+
+      -   name: "PHP: setup (8.4)"
+          uses: shivammathur/setup-php@v2
+          with:
+            php-version: 8.4
+            tools: symfony-cli
+
+      -   name: "[Composer] Install dependencies"
+          run: symfony composer install --prefer-dist --no-interaction --no-progress
+
+      -   name: "[Symfony] Create new webapp"
+          run: |
+            git config --global user.email "smn.andre@gmail.com"
+            git config --global user.name "Simon André"
+            symfony new my_app --webapp
+
+      -   name: "[Composer] Add sensiolabs/minify-bundle"
+          run: |
+            symfony composer config repositories.minify-bundle '{"type":"path", "url":"../","options":{"symlink":true}}'
+            symfony composer config minimum-stability dev
+            symfony composer config --json extra.symfony.allow-contrib 'true'
+            symfony composer require 'sensiolabs/minify-bundle:*' --no-interaction
+
+      -   name: "[Minify] Check configuration"
+          run: symfony console debug:config sensiolabs_minify -v
+          working-directory: my_app
+
+      -   name: "[Minify] Run minify:install"
+          run: symfony console minify:install -v
+          working-directory: my_app
+
+      -   name: "[Minify] Run minify:asset"
+          run: symfony console minify:asset assets/styles/app.css -v
+          working-directory: my_app
+
+      -   name: "[Symfony] Run asset-map:compile"
+          run: symfony console asset-map:compile -v
+          working-directory: my_app
+
+      -   name: "[Minify] Run asset-map:compile"
+          run: symfony console asset-map:compile -vv
+          working-directory: my_app
