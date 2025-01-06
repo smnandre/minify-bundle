@@ -191,10 +191,6 @@ jobs:
           run: symfony console minify:asset assets/styles/app.css -v
           working-directory: my_app
 
-      -   name: "[Symfony] Run asset-map:compile"
-          run: symfony console asset-map:compile -v
-          working-directory: my_app
-
       -   name: "[Minify] Run asset-map:compile"
           run: symfony console asset-map:compile -vv
           working-directory: my_app
