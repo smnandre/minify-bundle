@@ -234,7 +234,7 @@ sensiolabs_minify:
 ### Authors
 
 - MinifyBundle: [Simon André](https://github.com/smnandre) & [SensioLabs](https://github.com/sensiolabs)
-- Minify binary: [Timo Dewolf](https://github.com/tdewolff)
+- Minify binary: [Taco de Wolff](https://github.com/tdewolff)
 
 ### Acknowledgments
 
