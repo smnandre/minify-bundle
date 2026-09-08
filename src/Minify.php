@@ -15,6 +15,7 @@ namespace Sensiolabs\MinifyBundle;
 
 use Sensiolabs\MinifyBundle\Exception\RuntimeException;
 use Sensiolabs\MinifyBundle\Minifier\MinifierInterface;
+use Sensiolabs\MinifyBundle\Minifier\Options\OptionsInterface;
 use Symfony\Component\Process\Process;
 
 /**
@@ -27,9 +28,22 @@ final class Minify implements MinifierInterface
     ) {
     }
 
-    public function minify(string $input, string $type): string
+    public function minify(string $input, string $type/* , ?OptionsInterface $options = null */): string
     {
-        $process = new Process([$this->binaryPath, '--type',  $type]);
+        $options = \func_num_args() > 2 ? \func_get_arg(2) : null;
+        if (null !== $options && !$options instanceof OptionsInterface) {
+            throw new RuntimeException(sprintf('Expected $options to be an instance of "%s", got "%s".', OptionsInterface::class, get_debug_type($options)));
+        }
+        if (null !== $options && $options->getType() !== $type) {
+            throw new RuntimeException(sprintf('Options type "%s" does not match minify type "%s".', $options->getType(), $type));
+        }
+
+        $args = [$this->binaryPath, '--type', $type];
+        if (null !== $options) {
+            $args = [...$args, ...$options->toCliArgs()];
+        }
+
+        $process = new Process($args);
         $process->setInput($input);
 
         try {

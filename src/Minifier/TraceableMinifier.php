@@ -27,8 +27,10 @@ final class TraceableMinifier implements MinifierInterface
     ) {
     }
 
-    public function minify(string $input, string $type): string
+    public function minify(string $input, string $type/* , ?OptionsInterface $options = null */): string
     {
+        $options = \func_num_args() > 2 ? \func_get_arg(2) : null;
+
         $inputSize = strlen($input);
         $this->logger->debug('Minify command input: {inputSize} kB', [
             'inputSize' => round($inputSize / 1024, 1),
@@ -36,7 +38,9 @@ final class TraceableMinifier implements MinifierInterface
         ]);
 
         $timeStart = microtime(true);
-        $output = $this->minifier->minify($input, $type);
+        $output = null === $options
+                    ? $this->minifier->minify($input, $type)
+                    : $this->minifier->minify($input, $type, $options);
         $timeEnd = microtime(true);
 
         $outputSize = strlen($output);

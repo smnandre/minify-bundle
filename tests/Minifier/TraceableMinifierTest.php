@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Sensiolabs\MinifyBundle\Minifier\MinifierInterface;
+use Sensiolabs\MinifyBundle\Minifier\Options\HtmlOptions;
 use Sensiolabs\MinifyBundle\Minifier\TraceableMinifier;
 
 #[CoversClass(TraceableMinifier::class)]
@@ -62,6 +63,20 @@ class TraceableMinifierTest extends TestCase
 
         $traceableMinifier = new TraceableMinifier($minifier);
         $this->assertSame('', $traceableMinifier->minify('', 'css'));
+    }
+
+    public function testMinifyForwardsOptionsToInnerMinifier(): void
+    {
+        $options = new HtmlOptions(keepDocumentTags: true);
+
+        $minifier = $this->createMock(MinifierInterface::class);
+        $minifier->expects($this->once())
+            ->method('minify')
+            ->with('input content', 'html', $options)
+            ->willReturn('minified content');
+
+        $traceableMinifier = new TraceableMinifier($minifier);
+        $this->assertSame('minified content', $traceableMinifier->minify('input content', 'html', $options));
     }
 
     public function testMinifyHandlesExceptionFromMinifier(): void

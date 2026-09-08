@@ -5,7 +5,7 @@ if (!isset($argv[1]) || '--type' !== $argv[1] || !isset($argv[2])) {
     echo 'ERROR: Missing type argument.';
     exit(1);
 }
-if (!in_array($argv[2], ['css', 'js'])) {
+if (!in_array($argv[2], ['css', 'js', 'html'])) {
     echo 'ERROR: Invalid type argument.';
     exit(1);
 }
@@ -15,7 +15,14 @@ $input = file_get_contents('php://stdin');
 
 if ('css' === $typeArg) {
     file_put_contents('php://stdout', $input);
-    
+
+    return;
+}
+
+if ('html' === $typeArg) {
+    $extraArgs = array_slice($argv, 3);
+    file_put_contents('php://stdout', $input.'|args='.implode(' ', $extraArgs));
+
     return;
 }
 

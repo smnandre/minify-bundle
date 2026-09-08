@@ -16,6 +16,7 @@ namespace Sensiolabs\MinifyBundle\Tests;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Sensiolabs\MinifyBundle\Exception\RuntimeException;
+use Sensiolabs\MinifyBundle\Minifier\Options\HtmlOptions;
 use Sensiolabs\MinifyBundle\Minify;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -57,5 +58,30 @@ class MinifyTest extends TestCase
         $minify = new Minify(self::FIXTURES_BINARY_PATH);
 
         $minify->minify('input content', 'js');
+    }
+
+    public function testMinifyForwardsOptionsCliArgs(): void
+    {
+        $minify = new Minify(self::FIXTURES_BINARY_PATH);
+        $output = $minify->minify('<html></html>', 'html', new HtmlOptions(keepDocumentTags: true));
+
+        $this->assertSame('<html></html>|args=--html-keep-document-tags', $output);
+    }
+
+    public function testMinifyPassesNoExtraArgsWhenOptionsHaveNoFlags(): void
+    {
+        $minify = new Minify(self::FIXTURES_BINARY_PATH);
+        $output = $minify->minify('<html></html>', 'html', new HtmlOptions());
+
+        $this->assertSame('<html></html>|args=', $output);
+    }
+
+    public function testMinifyThrowsWhenOptionsTypeDoesNotMatch(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Options type "html" does not match minify type "css".');
+
+        $minify = new Minify(self::FIXTURES_BINARY_PATH);
+        $minify->minify('input', 'css', new HtmlOptions());
     }
 }
