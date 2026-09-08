@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.3.0
 
 - Add HTML support (`MinifierInterface::TYPE_HTML`) and `HtmlOptions::keepDocumentTags` to preserve the `html`, `head` and `body` tags (#41).
 - Add options support to `MinifierInterface::minify()` via a third, optional positional `OptionsInterface` argument, while preserving compatibility with existing two-argument implementations (#41).
