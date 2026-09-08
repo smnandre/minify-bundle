@@ -34,6 +34,7 @@ class MinifyTest extends TestCase
     {
         $minify = new Minify(self::FIXTURES_BINARY_PATH);
         $input = file_get_contents(self::FIXTURES_PATH.'/assets/css/style.css');
+        $this->assertIsString($input);
 
         $this->assertSame($input, $minify->minify($input, 'css'));
     }
@@ -45,7 +46,7 @@ class MinifyTest extends TestCase
 
         $minify = new Minify('foo');
 
-        $minify->minify('input content', 'foo');
+        $minify->minify('input content', 'css');
     }
 
     public function testMinifyThrowsRuntimeExceptionOnProcessFailure(): void
@@ -55,6 +56,6 @@ class MinifyTest extends TestCase
 
         $minify = new Minify(self::FIXTURES_BINARY_PATH);
 
-        $minify->minify('input content', 'foo');
+        $minify->minify('input content', 'js');
     }
 }

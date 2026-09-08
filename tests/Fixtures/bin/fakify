@@ -20,9 +20,5 @@ if ('css' === $typeArg) {
 }
 
 if ('js' === $typeArg) {
-//    file_put_contents('php://stdout', $input);
-    exit(20000000);
-    
-    return;
+    exit(1);
 }
-
