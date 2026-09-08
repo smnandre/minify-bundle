@@ -162,45 +162,6 @@ php bin/console minify:asset css/main.css
 php bin/console minify:asset css/main.css css/main.min.css
 ```
 
-### HTML from PHP
-
-Inject `MinifierInterface` into your service to minify HTML. Pass
-`new HtmlOptions(keepDocumentTags: true)` to preserve the `<html>`, `<head>` and
-`<body>` tags, for example when a preview crawler requires an explicit `<head>`.
-
-```php
-namespace App\Service;
-
-use Sensiolabs\MinifyBundle\Minifier\MinifierInterface;
-use Sensiolabs\MinifyBundle\Minifier\Options\HtmlOptions;
-
-final class HtmlMinifier
-{
-    public function __construct(
-        private readonly MinifierInterface $minifier,
-    ) {
-    }
-
-    public function minify(string $html): string
-    {
-        return $this->minifier->minify(
-            $html,
-            MinifierInterface::TYPE_HTML,
-            new HtmlOptions(keepDocumentTags: true),
-        );
-    }
-}
-```
-
-Omit the third argument to use the binary's default HTML minification behavior.
-In 1.x, pass options as the third **positional** argument: `options:` named
-arguments are not supported. The interface retains its two-argument signature
-for compatibility, so static analyzers may report the extra argument when the
-service is typed as `MinifierInterface`.
-
-HTML minification is available through this PHP API. The `minify:asset` command
-and AssetMapper integration support CSS and JavaScript.
-
 ## Configuration
 
 ### AssetMapper
